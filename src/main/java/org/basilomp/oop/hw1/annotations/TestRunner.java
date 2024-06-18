@@ -71,7 +71,6 @@ public class TestRunner {
     }
 
 
-
     public static void batchInvoke(Class<?> c,
                                    Method before,
                                    Method after,
@@ -82,22 +81,22 @@ public class TestRunner {
             if (before != null) {
                 before.invoke(null);
             }
-            if (after != null) {
-                if (!tests.isEmpty()) {
-                    for (Method test : tests) {
-                        if (!beforeTests.isEmpty()) {
-                            for (Method beforeMethod : beforeTests) {
-                                beforeMethod.invoke(null);
-                            }
+            if (!tests.isEmpty()) {
+                for (Method test : tests) {
+                    if (!beforeTests.isEmpty()) {
+                        for (Method beforeMethod : beforeTests) {
+                            beforeMethod.invoke(null);
                         }
-                        test.invoke(c.getDeclaredConstructor().newInstance());
-                        if (!afterTests.isEmpty()) {
-                            for (Method afterTest : afterTests) {
-                                afterTest.invoke(null);
-                            }
+                    }
+                    test.invoke(c.getDeclaredConstructor().newInstance());
+                    if (!afterTests.isEmpty()) {
+                        for (Method afterTest : afterTests) {
+                            afterTest.invoke(null);
                         }
                     }
                 }
+            }
+            if (after != null) {
                 after.invoke(null);
             }
         } catch (InvocationTargetException | IllegalAccessException e) {
