@@ -10,8 +10,11 @@ import java.util.Comparator;
 import java.util.List;
 
 public class TestRunner {
-    private static final String BEFORE = "@BeforeSuite";
-    private static final String AFTER = "@AfterSuite";
+    private static final String BEFORE_SUITE = "@BeforeSuite";
+    private static final String AFTER_SUITE = "@AfterSuite";
+    private static final String BEFORE = "@BeforeTest";
+    private static final String AFTER = "@AfterTest";
+
 
     public static void main(String[] args) {
         runTests(TestClass.class);
@@ -21,31 +24,33 @@ public class TestRunner {
         List<Method> testMethods = new ArrayList<>();
         Method beforeSuiteMethod = null;
         Method afterSuiteMethod = null;
-        List<Method> beforeTestMethods = new ArrayList<>();
-        List<Method> afterTestMethods = new ArrayList<>();
+        Method beforeTest = null;
+        Method afterTest = null;
 
         Method[] methods = c.getDeclaredMethods();
         for (Method method : methods) {
             if (method.isAnnotationPresent(BeforeSuite.class)) {
-                validateStatic(method, BEFORE);
-                validateSingleUse(beforeSuiteMethod, BEFORE);
+                validateStatic(method, BEFORE_SUITE);
+                validateSingleUse(beforeSuiteMethod, BEFORE_SUITE);
                 beforeSuiteMethod = method;
             } else if (method.isAnnotationPresent(AfterSuite.class)) {
-                validateStatic(method, AFTER);
-                validateSingleUse(afterSuiteMethod, AFTER);
+                validateStatic(method, AFTER_SUITE);
+                validateSingleUse(afterSuiteMethod, AFTER_SUITE);
                 afterSuiteMethod = method;
             } else if (method.isAnnotationPresent(Test.class)) {
                 validatePriority(method);
                 testMethods.add(method);
             } else if (method.isAnnotationPresent(BeforeTest.class)) {
-                beforeTestMethods.add(method);
+                validateSingleUse(beforeTest, BEFORE);
+                beforeTest = method;
             } else if (method.isAnnotationPresent(AfterTest.class)) {
-                afterTestMethods.add(method);
+                validateSingleUse(afterTest, AFTER);
+                afterTest = method;
             }
             testMethods.sort(Comparator.comparingInt(tm -> tm.getAnnotation(Test.class)
                     .priority()));
         }
-        batchInvoke(c, beforeSuiteMethod, afterSuiteMethod, testMethods, beforeTestMethods, afterTestMethods);
+        batchInvoke(c, beforeSuiteMethod, afterSuiteMethod, testMethods, beforeTest, afterTest);
     }
 
     public static void validateStatic(Method method, String annotationName) {
@@ -72,32 +77,28 @@ public class TestRunner {
 
 
     public static void batchInvoke(Class<?> c,
-                                   Method before,
-                                   Method after,
+                                   Method beforeSuiteTest,
+                                   Method afterSuiteTest,
                                    List<Method> tests,
-                                   List<Method> beforeTests,
-                                   List<Method> afterTests) {
+                                   Method beforeTest,
+                                   Method afterTest) {
         try {
-            if (before != null) {
-                before.invoke(null);
+            if (beforeSuiteTest != null) {
+                beforeSuiteTest.invoke(null);
             }
             if (!tests.isEmpty()) {
                 for (Method test : tests) {
-                    if (!beforeTests.isEmpty()) {
-                        for (Method beforeMethod : beforeTests) {
-                            beforeMethod.invoke(null);
-                        }
+                    if (beforeTest != null) {
+                        beforeTest.invoke(null);
                     }
                     test.invoke(c.getDeclaredConstructor().newInstance());
-                    if (!afterTests.isEmpty()) {
-                        for (Method afterTest : afterTests) {
+                    if (afterTest != null) {
                             afterTest.invoke(null);
-                        }
                     }
                 }
             }
-            if (after != null) {
-                after.invoke(null);
+            if (afterSuiteTest != null) {
+                afterSuiteTest.invoke(null);
             }
         } catch (InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();

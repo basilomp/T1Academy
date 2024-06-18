@@ -48,14 +48,4 @@ public class TestClass {
     public static void beforeTest() {
         System.out.println("@BeforeTest test");
     }
-
-//    @BeforeSuite
-//    public static void AnotherBeforeSuite() {
-//        System.out.println("@BeforeSuite test");
-//    }
-
-//    @AfterSuite
-//    public static void AnotherAfterSuite() {
-//        System.out.println("@AfterSuite test");
-//    }
 }
