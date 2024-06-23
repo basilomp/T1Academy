@@ -12,7 +12,6 @@ import java.util.function.Function;
 
 import static java.util.stream.Collectors.*;
 
-@Slf4j
 public class Runner {
     public static void main(String[] args) {
         List<Integer> integers = Arrays.asList(5, 2, 10, 9, 4, 3, 10, 1, 13);
