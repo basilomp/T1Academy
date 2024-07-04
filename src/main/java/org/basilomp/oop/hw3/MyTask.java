@@ -11,7 +11,6 @@ import java.util.Queue;
 @Getter
 public class MyTask extends Thread {
     private final String taskName;
-    private final MyThreadPool threadPool;
 
 
     @Override

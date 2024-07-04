@@ -12,14 +12,14 @@ public class MyThreadPool {
     private final int capacity;
     private final Queue<Runnable> taskQueue;
     private final MyTask[] tasks;
-    private boolean isShutdown = false;
+    private volatile boolean isShutdown = false;
 
     public MyThreadPool(int capacity) {
         this.capacity = capacity;
         this.taskQueue = new LinkedList<>();
         this.tasks = new MyTask[capacity];
         for (int i = 0; i < capacity; i++) {
-            tasks[i] = new MyTask(String.valueOf(i), this);
+            tasks[i] = new MyTask(String.valueOf(i));
             tasks[i].start();
         }
         log.info("MyThreadPool created with capacity: {}", capacity);
