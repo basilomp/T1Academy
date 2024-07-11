@@ -1,9 +1,10 @@
-package org.basilomp.spring;
+package org.basilomp.spring.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
@@ -11,6 +12,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @PropertySource("classpath:application.properties")
+@ComponentScan(basePackages = "org.basilomp.spring")
 public class AppConfig {
 
     @Value("${spring.datasource.driver-class-name}")
@@ -30,11 +32,6 @@ public class AppConfig {
         dataSourceConfig.setPassword(dataSourcePassword);
         dataSourceConfig.setDriverClassName(driver);
         return new HikariDataSource(dataSourceConfig);
-    }
-
-    @Bean
-    public UserService userService() {
-        return new UserService(dataSource());
     }
 }
 
