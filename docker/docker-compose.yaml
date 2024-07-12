@@ -1,0 +1,17 @@
+version: '3.6'
+name: t1_docker
+services:
+  postgres:
+    container_name: t1_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      TZ: Europe/Moscow
+    ports:
+      - "5432:5432"
+    build:
+      context: ./
+      dockerfile: Dockerfile_postgres
+    restart: unless-stopped
+    volumes:
+      - ./postgres_init.sql:/docker-entrypoint-initdb.d/postgres_init.sql
