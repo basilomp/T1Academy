@@ -11,7 +11,7 @@ public class Runner {
 
     public static void main(String[] args) {
         final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        UserService userService = context.getBean("userService", UserService.class);
+        UserService userService = context.getBean(UserService.class);
 
         List<User> allUsers = userService.getAllUsers();
         System.out.println("Initial set of users: " + allUsers);
