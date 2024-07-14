@@ -17,7 +17,7 @@ import java.util.Optional;
 @Slf4j
 @Repository
 @RequiredArgsConstructor
-public class UserDAO {
+public class UserDao {
 
     private final DataSource dataSource;
 
@@ -28,7 +28,7 @@ public class UserDAO {
              PreparedStatement preparedStatement = connection.prepareStatement(insertSQL)) {
             preparedStatement.setString(1, user.getUsername());
             preparedStatement.executeUpdate();
-            try (ResultSet resultSet = preparedStatement.getGeneratedKeys()){
+            try (ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
                 if (resultSet.next()) {
                     user.setId(resultSet.getInt(1));
                 }
@@ -103,7 +103,7 @@ public class UserDAO {
         log.info("Deleting user: {}", user);
         final String deleteSQL = "DELETE FROM users WHERE id = ?";
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(deleteSQL)){
+             PreparedStatement preparedStatement = connection.prepareStatement(deleteSQL)) {
             preparedStatement.setInt(1, user.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {

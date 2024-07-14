@@ -2,7 +2,7 @@ package org.basilomp.spring.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.basilomp.spring.dao.UserDAO;
+import org.basilomp.spring.dao.UserDao;
 import org.basilomp.spring.model.User;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final UserDAO userDAO;
+    private final UserDao userDAO;
 
     public void saveUser(User user) {
         userDAO.insertUser(user);
