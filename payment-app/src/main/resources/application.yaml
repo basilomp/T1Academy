@@ -1,0 +1,29 @@
+server:
+  port: 8082
+  servlet:
+    context-path: "/payment-app"
+spring:
+  application:
+    name: payment-app
+  datasource:
+    url: jdbc:postgresql://localhost:5432/t1_db
+    password: postgres
+    username: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+integrations:
+  executors:
+    payments-executor-client:
+        port: 8083
+        url: "http://localhost:8031/executor"
+        connect-timeout: 1s
+        read-timeout: 30s
+  products:
+    product-executor-client:
+        url: "http://localhost:8083/product-app/api/v1"
+        connect-timeout: 1s
+        read-timeout: 30s

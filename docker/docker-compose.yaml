@@ -1,6 +1,17 @@
-version: '3.6'
+version: '3.8'
 name: t1_docker
 services:
+  wiremock-setup-core:
+    image: rodolpheche/wiremock
+    container_name: wiremock-setup-core
+    ports:
+      - "8031:8080"
+    volumes:
+      - ./wiremock/stubs/__files/:/home/wiremock/__files/
+      - ./wiremock/stubs/mappings/:/home/wiremock/mappings/
+    command:
+      - -verbose
+      - -global-response-templating
   postgres:
     container_name: t1_postgres
     environment:
@@ -11,7 +22,7 @@ services:
       - "5432:5432"
     build:
       context: ./
-      dockerfile: Dockerfile_postgres
+      dockerfile: postgres/Dockerfile_postgres
     restart: unless-stopped
     volumes:
-      - ./postgres_init.sql:/docker-entrypoint-initdb.d/postgres_init.sql
+      - ./postgres/postgres_init.sql:/docker-entrypoint-initdb.d/postgres_init.sql
