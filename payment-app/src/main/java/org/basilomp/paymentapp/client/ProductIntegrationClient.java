@@ -1,4 +1,4 @@
-package org.basilomp.paymentapp.service;
+package org.basilomp.paymentapp.client;
 
 import lombok.RequiredArgsConstructor;
 import org.basilomp.paymentapp.dto.PaymentRequestDto;
@@ -9,28 +9,29 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service
+@Component
 @RequiredArgsConstructor
-public class IntegrationProductService {
+public class ProductIntegrationClient {
 
     private final RestTemplate productRestClient;
 
     public List<ProductResponseDto> getProducts() {
-        ParameterizedTypeReference<List<ProductResponseDto>> responseType = new ParameterizedTypeReference<List<ProductResponseDto>>() {};
+        ParameterizedTypeReference<List<ProductResponseDto>> responseType = new ParameterizedTypeReference<List<ProductResponseDto>>() {
+        };
         return productRestClient.exchange("/product/all", HttpMethod.GET, null, responseType).getBody();
     }
 
     public List<ProductResponseDto> getProductsByUser(Integer userId) {
-        ParameterizedTypeReference<List<ProductResponseDto>> responseType = new ParameterizedTypeReference<>() {};
+        ParameterizedTypeReference<List<ProductResponseDto>> responseType = new ParameterizedTypeReference<>() {
+        };
         Map<String, Integer> variables = new HashMap<>();
         variables.put("userId", userId);
         return productRestClient.exchange("/product/user?userId={userId}",
