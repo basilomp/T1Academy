@@ -1,0 +1,4 @@
+application:
+  scheduler:
+    limits:
+      reset-interval: 0 * * * * *
